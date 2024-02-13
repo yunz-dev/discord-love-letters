@@ -1,23 +1,29 @@
 # from dotenv import load_dotenv
 import requests
-import os
 import gspread
 from time import sleep
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
+import pytz
+
 
 def getImage(image):
     if image:
         return image.replace('open', 'thumbnail', 1) + "&sz=w2000"
     return ""
 
+
 def main():
-    # load_dotenv()
-    # token = os.getenv('TOKEN')
+    time_zone = pytz.timezone("Australia/Sydney")
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     key = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
-    increment_row = 'B2'
-    night_timer = 0
+    increment_row = 'A2'
     while (True):
+        now = datetime.now(time_zone).strftime("%H%M%S")
+        while int(now) < 90000:  # check if past midnight and before 9am
+            now = datetime.now(time_zone).strftime("%H%M%S")
+            print(f"No more Letters, it's too late ({now})")
+            sleep(300)
 
         client = gspread.authorize(key)
 
@@ -29,19 +35,14 @@ def main():
         curr = int(data_sheet.acell(increment_row).value)
         sleep_timer = int(data_sheet.acell("C2").value)
 
-        if  worksheet.acell("B" + str(curr + 1)).value:
+        if worksheet.acell("B" + str(curr + 1)).value:
             data = {
-                # "content": "insert something here idk",
                 "embeds": [
                     {
                         "title": "#" + str(curr),
                         "description": worksheet.acell("B" + str(curr + 1)).value,
                         "color": 14918853,
-                        # "author": {
-                        #     "name": "AUNSW LOVE LETTERS 2024"
-                        # },
                         "image": {
-                            # "url": worksheet.col_values(3)[curr]
                             "url": getImage(worksheet.acell("C" + str(curr + 1)).value)
                         }
                     }
@@ -55,15 +56,8 @@ def main():
             else:
                 print(f"Love letter #{curr} got lost :(")
             data_sheet.update_acell(increment_row, curr + 1)
-        night_timer += sleep_timer
         print(f"sleeping for {sleep_timer}")
         sleep(sleep_timer)
-        # if night_timer >= 100:
-        if night_timer >= 100: # 15 hours
-            night_timer = 0
-            # sleep(50)
-            print("Goodnight Bois!")
-            sleep(100) #9 hours
 
 
 if __name__ == "__main__":
