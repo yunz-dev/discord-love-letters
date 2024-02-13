@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 import requests
 import os
 import gspread
@@ -11,8 +11,8 @@ def getImage(image):
     return ""
 
 def main():
-    load_dotenv()
-    token = os.getenv('TOKEN')
+    # load_dotenv()
+    # token = os.getenv('TOKEN')
     scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
     key = ServiceAccountCredentials.from_json_keyfile_name('keys.json', scope)
     increment_row = 'B2'
@@ -25,6 +25,7 @@ def main():
 
         worksheet = sheet.get_worksheet(0)
         data_sheet = sheet.get_worksheet(1)
+        token = str(data_sheet.acell("D2").value)
         curr = int(data_sheet.acell(increment_row).value)
         sleep_timer = int(data_sheet.acell("C2").value)
 
