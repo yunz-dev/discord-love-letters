@@ -29,20 +29,20 @@ def main():
         curr = int(data_sheet.acell(increment_row).value)
         sleep_timer = int(data_sheet.acell("C2").value)
 
-        if  worksheet.col_values(2)[curr]:
+        if  worksheet.acell("B" + str(curr + 1)).value:
             data = {
                 # "content": "insert something here idk",
                 "embeds": [
                     {
                         "title": "#" + str(curr),
-                        "description": worksheet.col_values(2)[curr],
+                        "description": worksheet.acell("B" + str(curr + 1)).value,
                         "color": 14918853,
                         # "author": {
                         #     "name": "AUNSW LOVE LETTERS 2024"
                         # },
                         "image": {
                             # "url": worksheet.col_values(3)[curr]
-                            "url": getImage(worksheet.col_values(3)[curr])
+                            "url": getImage(worksheet.acell("C" + str(curr + 1)).value)
                         }
                     }
                 ],
@@ -51,17 +51,19 @@ def main():
             response = requests.post(token, json=data)
 
             if response.status_code == 204:
-                print("Love letter successfully posted!")
+                print(f"Love letter #{curr} successfully posted!")
             else:
-                print("Love letter got lost :(")
+                print(f"Love letter #{curr} got lost :(")
             data_sheet.update_acell(increment_row, curr + 1)
         night_timer += sleep_timer
+        print(f"sleeping for {sleep_timer}")
         sleep(sleep_timer)
-        if night_timer >= 100:
-        # if night_timer >= 54000:
+        # if night_timer >= 100:
+        if night_timer >= 100: # 15 hours
             night_timer = 0
-            sleep(50)
-            # sleep(32400)
+            # sleep(50)
+            print("Goodnight Bois!")
+            sleep(100) #9 hours
 
 
 if __name__ == "__main__":
