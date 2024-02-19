@@ -1,6 +1,5 @@
 # Discord Love Letters 
-# DELETE JSON FILES AND KEYS BEFORE PUBLIC!!!
-A Python3 script that utilises discord webhooks in order to send anonymous love letters to a discord server. Love letters are stored in a google sheet (which gets it's data from a google form in real time) and is fetched using the google sheets API.
+A Python3 script that utilises discord webhooks in order to send anonymous love letters to a discord server. Love letters are stored in a google sheet (which gets it's data from a google form in real time) and is fetched using the google sheets API. Complete with useful (but cute) console messages like `love letter #42 was lost :(`
 
 ## Installation
 1. clone repo
@@ -10,8 +9,13 @@ source env/bin/activate
 ```
 3. Install dependencies with `pip install -r requirements.txt` (actually you can skip this haha cuz i accidently pushed to main)
 4. Replace json file with your own google api key
-5. Fill in empty cells with corresponding information
-6. Run `python3 main.py`
+> make sure it has read/write access to the sheet
+1. Fill in empty cells with corresponding information
+2. Run `python3 main.py`
+
+## Images:
+
+![Screenshot of love letter](images/screenshot.png)
 
 ## ~~TO-DO~~ Done
 1. webhooks
